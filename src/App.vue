@@ -6,7 +6,7 @@
         <router-view />
       </keep-alive>
       <div v-if="notFound" class="container">
-        <h2>Page not found</h2>
+        <h2>Page not foundz</h2>
         <p>
           You might want to try the
           <router-link to="/">front page</router-link>.
