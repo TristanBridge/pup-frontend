@@ -1,9 +1,14 @@
 import axios from "axios";
 import { memoize } from "./util";
+/* eslint-disable */
 
 const API_BASE = process.env.VUE_APP_API_BASE || "http://localhost:1337/";
 
-export const apiUrl = path => API_BASE + path.replace(/^\//, "");
+export const apiUrl = path => {
+  const url = API_BASE + '/' + path.replace(/^\//, "");
+  console.log("API URL:", url);
+  return url;
+};
 
 export const get = async (endpoint, params) =>
   (await axios.get(apiUrl(endpoint), { params })).data;
