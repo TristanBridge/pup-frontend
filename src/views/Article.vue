@@ -23,11 +23,11 @@
       v-if="article.content && article.content.length"
       class="container article-content"
     >
-      <ContentSection
-        v-for="section in article.content"
-        :key="section.label"
-        :section="section"
-      />
+   <ContentSection
+  v-for="section in article.content"
+  :key="section.label"
+  :section="section"
+/>
     </div>
 
     <References
@@ -82,6 +82,7 @@ export default {
         label: "Biennial International Conference for the Craft Sciences 2021"
       });
       const article = await getArticle(this.identifier, this.revision);
+      // console.log('Article data:', article);
       if (!article) {
         this.reportNotFound();
         return;
