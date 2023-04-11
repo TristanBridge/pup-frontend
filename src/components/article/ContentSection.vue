@@ -1,7 +1,7 @@
 <template>
   <div>
-    <TextMedia :section="section" />
-    <TextNotes :section="section" />
+    <TextMedia :section="section" :order="order" />
+    <TextNotes :section="section" :order="order" />
   </div>
 </template>
 
@@ -12,11 +12,15 @@ import TextNotes from "@/components/content/textNotes.vue";
 
 export default {
   components: {
-    TextMedia, TextNotes
+    TextMedia, TextNotes,
   },
   props: {
     section: {
       type: Object,
+      required: true,
+    },
+    order: {
+      type: Number,
       required: true,
     },
   },

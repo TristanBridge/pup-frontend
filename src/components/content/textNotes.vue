@@ -1,6 +1,17 @@
 <template>
-  <section :id="section.label" class="article-section">
-  this is a text article {{ section.text_text }}
+  <section :id="'section-' + order" class="article-section">
+    <div class="content-container">
+      <div class="order">
+        <a @click="copyLinkToClipboard" :href="'#section-' + order">{{ order }}</a>
+      </div>
+      <div class="text-content">
+        {{ section.text_text }}
+      </div>
+      <div class="text-caption">
+        {{ section.text_caption }}
+      </div>
+    </div>
+    <div v-if="copied" class="copied-tooltip">Copied!</div>
   </section>
 </template>
 
@@ -8,124 +19,66 @@
 import { apiUrl } from "@/assets/api";
 
 export default {
-  props: ["section"],
+  props: ["section", "order"],
+  data() {
+    return {
+      copied: false,
+    };
+  },
   methods: {
-    apiUrl
+      apiUrl,
+      copyLinkToClipboard() {
+      this.copied = true;
+      console.log('ho')
+      setTimeout(() => {
+        this.copied = false;
+      }, 2000);
+    },
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .article-section {
   margin: 1.5rem 0;
   scroll-margin-top: 1rem;
+}
 
-  .content-ear {
-    position: absolute;
-    left: 0%;
-    width: 8%;
-    text-align: right;
-    font-size: 1.25rem;
-    font-weight: 100;
-  }
+.content-container {
+  display: flex;
+}
 
-  .content-media {
-    margin: 0 0 1rem;
-    font-size: 0.9rem;
-    text-align: right;
-    position: relative;
-    // font-family: Signika, sans-serif;
-
-    .media-item {
-      margin-bottom: 0.5rem;
-
-      .media-visual {
-        max-width: 100%;
-      }
-    }
-
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      margin-right: -15px;
-      flex-direction: row-reverse;
-
-      .media-item {
-        width: calc(50% - 15px);
-        margin: 0 15px 15px 0;
-
-        .media-visual {
-          display: block;
-        }
-      }
+.order {
+  padding-right: 1rem; // Add some space between the order number and the content
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
   }
+}
 
-  .content-text {
-    text-align: justify;
+.text-content,
+.text-caption {
+  flex: 1;
+  width: 50%;
+}
 
-    p:first-child {
-      margin-top: 0;
-    }
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
+.text-caption {
+  padding-left: 1rem; // Optional, to add some space between the text and caption
+}
 
-  @media screen and (min-width: 1000px) {
-    display: flex;
-
-    .content-media {
-      width: 47.5%;
-      margin-right: 5%;
-
-      &::after {
-        position: absolute;
-        top: 0.25rem;
-        left: 103%;
-        content: " ";
-        display: block;
-        width: 0.75rem;
-        height: 0.75rem;
-        background-image: url("../../assets/chevrons.png");
-        background-size: cover;
-        transform: scaleX(-1);
-      }
-    }
-
-    .content-text {
-      width: 47.5%;
-    }
-
-    // Every other section is laid out in reverse.
-    &:nth-child(2n) {
-      flex-direction: row-reverse;
-
-      .content-media {
-        margin-left: 5%;
-        margin-right: 0;
-        text-align: left;
-
-        .gallery {
-          flex-direction: row;
-        }
-
-        &::after {
-          left: auto;
-          right: 103%;
-          transform: none;
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    .content-media {
-      width: 60%;
-    }
-    .content-text {
-      width: 35%;
-    }
-  }
+.copied-tooltip {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 30px;
+  z-index: 10;
 }
 </style>
