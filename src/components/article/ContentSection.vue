@@ -1,7 +1,7 @@
 <template>
   <div>
-    <TextMedia :section="section" :order="order" />
-    <TextNotes :section="section" :order="order" />
+    <TextMedia v-if="isTextMedia" :section="section" :order="order" />
+    <TextNotes v-else :section="section" :order="order" />
   </div>
 </template>
 
@@ -23,6 +23,12 @@ export default {
       type: Number,
       required: true,
     },
+  },
+  computed: {
+  isTextMedia() {
+    const value = this.section.media_media !== undefined;
+    return value;
+  },
   },
 };
 </script>

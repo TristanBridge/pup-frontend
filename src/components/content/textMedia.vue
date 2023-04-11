@@ -1,75 +1,136 @@
 <template>
-
-  <section :id="section.label" class="article-section">
-  <!-- {{section.text_text}} -->
-    <div class="content-ear">
-      <a :href="`#${section.label}`">{{ section.label }}</a>
-    </div>
-    <figure v-if="section.media_media" class="content-media">
-      <div :class="{ gallery: section.media_media.length > 1 }">
-        <div v-for="media of section.media_media" :key="media.id" class="media-item">
-          <img
-            v-if="media.mime.split('/')[0] == 'image'"
-            :src="
-              media.url.slice(0, 4) === 'http' ? media.url : apiUrl(media.url)
-            "
-            class="media-visual"
-          />
-          <video
-            v-if="media.mime.split('/')[0] == 'video'"
-            playsinline
-            controls
-            class="media-visual"
-          >
-            <source
-              :src="
-                media.url.slice(0, 4) === 'http' ? media.url : apiUrl(media.url)
-              "
-              :type="media.mime"
+  <section :id="'section-' + order" class="article-section">
+    <div class="content-container">
+      <div class="order">
+          <a @click="copyLinkToClipboard">{{ order }}</a>
+          <div v-if="copied" class="copied-tooltip">Copied!</div>
+      </div>
+      <div class="image-content">
+            <div class="content-ear">
+            <a :href="`#${section.label}`">{{ section.label }}</a>
+            </div>
+            <div :class="{ gallery: section.media_media.length > 1 }">
+              <div v-for="media of section.media_media" :key="media.id" class="media-item">
+                <img
+                  v-if="media.mime.split('/')[0] == 'image'"
+                  :src="
+                    media.url.slice(0, 4) === 'http' ? media.url : apiUrl(media.url)
+                  "
+                  class="media-visual"
+                />
+                <video
+                  v-if="media.mime.split('/')[0] == 'video'"
+                  playsinline
+                  controls
+                  class="media-visual"
+                >
+                  <source
+                    :src="
+                      media.url.slice(0, 4) === 'http' ? media.url : apiUrl(media.url)
+                    "
+                    :type="media.mime"
+                  />
+                </video>
+              </div>
+            </div>
+            <div
+              v-if="section.media_caption"
+              class="media-caption"
+              v-html="section.media_caption"
             />
-          </video>
+            <div v-if="section.media_rights" class="media-rights">
+              Rights: {{ section.media_rights }}
+            </div>
+      </div>
+      <div class="caption-content">
+        <div v-if="section.media_text && section.media_text[0] != '<'" class="content-text content-text-plain">
+          <p>{{ section.media_text }}</p>
         </div>
+        <div v-else class="content-text content-text-html" v-html="section.media_text" />
       </div>
-      <div
-        v-if="section.media_caption"
-        class="media-caption"
-        v-html="section.media_caption"
-      />
-      <div v-if="section.media_rights" class="media-rights">
-        Rights: {{ section.media_rights }}
-      </div>
-    </figure>
-    <div v-if="section.media_text && section.media_text[0] != '<'" class="content-text content-text-plain">
-      <p>{{ section.media_text }}</p>
     </div>
-    <div v-else class="content-text content-text-html" v-html="section.media_text" />
   </section>
 </template>
+
 
 <script>
 import { apiUrl } from "@/assets/api";
 
 export default {
-  props: ["section"],
+  props: ["section", "order"],
+   data() {
+    return {
+      copied: false,
+    };
+  },
   methods: {
-    apiUrl
-  }
+    apiUrl,
+     copyLinkToClipboard() {
+      this.copied = true;
+      const link = `${window.location.origin}${window.location.pathname}#section-${this.order}`;
+      navigator.clipboard.writeText(link);
+      setTimeout(() => {
+        this.copied = false;
+      }, 2000);
+    },
+  },
+
 };
 </script>
 
 <style lang="scss" scoped>
+.copied-tooltip {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(100% + 5px);
+  z-index: 1000;
+  bottom: calc(100% + 5px); 
+}
+
+.content-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.order {
+  cursor: pointer;
+  position: relative;
+  padding-right: 1rem;
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.content-ear {
+  flex: 1;
+}
+
+.image-content {
+  position: relative;
+  flex: 1;
+  width: 50%;
+}
+
+.caption-content {
+  flex: 1;
+  width: 50%;
+  padding-left: 1rem;
+}
+
+
 .article-section {
   margin: 1.5rem 0;
   scroll-margin-top: 1rem;
-
-  .content-ear {
-    position: absolute;
-    left: 0%;
-    width: 8%;
-    text-align: right;
-    font-size: 1.25rem;
-    font-weight: 100;
-  }
 
   .content-media {
     margin: 0 0 1rem;
@@ -118,7 +179,7 @@ export default {
     display: flex;
 
     .content-media {
-      width: 47.5%;
+      // width: 47.5%;
       margin-right: 5%;
 
       &::after {
@@ -136,7 +197,7 @@ export default {
     }
 
     .content-text {
-      width: 47.5%;
+      // width: 47.5%;
     }
 
     // Every other section is laid out in reverse.
@@ -163,10 +224,10 @@ export default {
 
   @media screen and (min-width: 1200px) {
     .content-media {
-      width: 60%;
+      // width: 60%;
     }
     .content-text {
-      width: 35%;
+      // width: 35%;
     }
   }
 }

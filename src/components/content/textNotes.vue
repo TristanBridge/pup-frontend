@@ -2,7 +2,8 @@
   <section :id="'section-' + order" class="article-section">
     <div class="content-container">
       <div class="order">
-        <a @click="copyLinkToClipboard" :href="'#section-' + order">{{ order }}</a>
+        <a @click="copyLinkToClipboard">{{ order }}</a>
+        <div v-if="copied" class="copied-tooltip">Copied!</div>
       </div>
       <div class="text-content">
         {{ section.text_text }}
@@ -11,7 +12,6 @@
         {{ section.text_caption }}
       </div>
     </div>
-    <div v-if="copied" class="copied-tooltip">Copied!</div>
   </section>
 </template>
 
@@ -26,16 +26,17 @@ export default {
     };
   },
   methods: {
-      apiUrl,
-      copyLinkToClipboard() {
+    apiUrl,
+    copyLinkToClipboard() {
       this.copied = true;
-      console.log('ho')
+      const link = `${window.location.origin}${window.location.pathname}#section-${this.order}`;
+      navigator.clipboard.writeText(link);
       setTimeout(() => {
         this.copied = false;
       }, 2000);
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -49,7 +50,9 @@ export default {
 }
 
 .order {
+  cursor: pointer;
   padding-right: 1rem; // Add some space between the order number and the content
+  position: relative; // Added for the tooltip
   a {
     color: inherit;
     text-decoration: none;
@@ -78,7 +81,7 @@ export default {
   font-size: 0.9rem;
   left: 50%;
   transform: translateX(-50%);
-  top: 30px;
+  bottom: calc(100% + 5px);
   z-index: 10;
 }
 </style>

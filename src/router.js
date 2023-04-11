@@ -33,6 +33,7 @@ export default new Router({
       component: NotFound
     }
   ],
+
   scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
       return new Promise((resolve) => {
@@ -46,6 +47,8 @@ export default new Router({
         }, 500);
       });
     }
+  
     return savedPosition || { x: 0, y: 0 };
   }  
+  
 });
