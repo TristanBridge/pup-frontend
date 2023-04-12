@@ -5,10 +5,9 @@
         <a @click="copyLinkToClipboard">{{ order }}</a>
         <div v-if="copied" class="copied-tooltip">Copied!</div>
       </div>
-      hi
-      <!-- <div class="VisualModule">
+      <div class="VisualModule">
         <MainVideo :guplay-id="section.video_guplayId" />
-      </div> -->
+      </div>
     </div>
   </section>
 </template>
