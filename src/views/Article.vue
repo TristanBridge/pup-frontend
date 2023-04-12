@@ -83,7 +83,6 @@ export default {
         label: "Biennial International Conference for the Craft Sciences 2021"
       });
       const article = await getArticle(this.identifier, this.revision);
-      // console.log('Article data:', article);
       if (!article) {
         this.reportNotFound();
         return;

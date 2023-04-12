@@ -5,19 +5,22 @@
         <a @click="copyLinkToClipboard">{{ order }}</a>
         <div v-if="copied" class="copied-tooltip">Copied!</div>
       </div>
-      <div class="text-content">
-        {{ section.text_text }}
-      </div>
-      <div class="text-caption" v-html="parseMarkdown(section.text_caption)"></div>
+      hi
+      <!-- <div class="VisualModule">
+        <MainVideo :guplay-id="section.video_guplayId" />
+      </div> -->
     </div>
   </section>
 </template>
 
 <script>
 import { apiUrl } from "@/assets/api";
-import { parseMarkdown } from "@/assets/markdown";
+import MainVideo from "@/components/article/MainVideo.vue";
 
 export default {
+  components: {
+    MainVideo, 
+  },
   props: ["section", "order"],
   data() {
     return {
@@ -26,7 +29,6 @@ export default {
   },
   methods: {
     apiUrl,
-    parseMarkdown,
     copyLinkToClipboard() {
       this.copied = true;
       const link = `${window.location.origin}${window.location.pathname}#section-${this.order}`;
@@ -51,8 +53,8 @@ export default {
 
 .order {
   cursor: pointer;
-  padding-right: 1rem; // Add some space between the order number and the content
-  position: relative; // Added for the tooltip
+  padding-right: 1rem;
+  position: relative;
   a {
     color: inherit;
     text-decoration: none;
@@ -61,17 +63,6 @@ export default {
     }
   }
 }
-
-.text-content,
-.text-caption {
-  flex: 1;
-  width: 50%;
-}
-
-.text-caption {
-  padding-left: 1rem; // Optional, to add some space between the text and caption
-}
-
 .copied-tooltip {
   position: absolute;
   background-color: #ffffff;

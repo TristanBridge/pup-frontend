@@ -42,12 +42,12 @@
               Rights: {{ section.media_rights }}
             </div>
       </div>
-      <div class="caption-content">
-        <div v-if="section.media_text && section.media_text[0] != '<'" class="content-text content-text-plain">
-          <p>{{ section.media_text }}</p>
-        </div>
+        <div class="caption-content">
+          <div v-if="section.media_text && section.media_text[0] != '<'" class="content-text content-text-plain">
+            <div v-html="parseMarkdown(section.media_text)"></div>
+          </div>
         <div v-else class="content-text content-text-html" v-html="section.media_text" />
-      </div>
+    </div>
     </div>
   </section>
 </template>
@@ -55,6 +55,7 @@
 
 <script>
 import { apiUrl } from "@/assets/api";
+import { parseMarkdown } from "@/assets/markdown";
 
 export default {
   props: ["section", "order"],
@@ -65,6 +66,7 @@ export default {
   },
   methods: {
     apiUrl,
+    parseMarkdown,
      copyLinkToClipboard() {
       this.copied = true;
       const link = `${window.location.origin}${window.location.pathname}#section-${this.order}`;
