@@ -1,6 +1,6 @@
 <template>
   <section :id="'section-' + order" class="article-section">
-    <div class="content-container">
+  <div class="content-container" :class="{ 'full-width': section.media_fullWidth }">
       <div class="order">
           <a @click="copyLinkToClipboard">{{ order }}</a>
           <div v-if="copied" class="copied-tooltip">Copied!</div>
@@ -10,7 +10,12 @@
             <a :href="`#${section.label}`">{{ section.label }}</a>
             </div>
             <div :class="{ gallery: section.media_media.length > 1 }">
-              <div v-for="media of section.media_media" :key="media.id" class="media-item">
+                <div
+                  v-for="media of section.media_media"
+                  :key="media.id"
+                  class="media-item"
+                  :style="{ width: section.media_fullWidth ? '100%' : 'calc(50% - 15px)' }"
+                >                
                 <img
                   v-if="media.mime.split('/')[0] == 'image'"
                   :src="
@@ -42,7 +47,7 @@
               Rights: {{ section.media_rights }}
             </div>
       </div>
-        <div class="caption-content">
+      <div class="caption-content">
           <div v-if="section.media_text && section.media_text[0] != '<'" class="content-text content-text-plain">
             <div v-html="parseMarkdown(section.media_text)"></div>
           </div>
@@ -96,11 +101,20 @@ export default {
 }
 
 .content-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  grid-template-rows: auto auto;
   align-items: flex-start;
+  gap: 1rem;
+
+  &.full-width {
+    grid-template-columns: auto 100%;
+  }
 }
 
 .order {
+  grid-row: 1;
+  grid-column: 1;
   cursor: pointer;
   position: relative;
   padding-right: 1rem;
@@ -114,21 +128,24 @@ export default {
 }
 
 .content-ear {
-  flex: 1;
+  grid-row: 1;
+  grid-column: 2;
 }
 
 .image-content {
-  position: relative;
-  flex: 1;
-  width: 50%;
+  grid-row: 1;
+  grid-column: 2 / span 2;
 }
 
 .caption-content {
-  flex: 1;
-  width: 50%;
-  padding-left: 1rem;
-}
+  grid-row: 2;
+  grid-column: 2 / span 2;
 
+  .content-container:not(.full-width) & {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
 
 .article-section {
   margin: 1.5rem 0;

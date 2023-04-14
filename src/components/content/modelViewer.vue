@@ -6,23 +6,32 @@
           <a @click="copyLinkToClipboard">{{ order }}</a>
           <div v-if="copied" class="copied-tooltip">Copied!</div>
         </div>
-        <div class="video-container">
-          <MainVideo class="full-width-video" :guplay-id="section.video_guplayId" />
+        <div class="VisualModule">
+          <div class="sketchfab-embed-wrapper">
+            <iframe
+              title="Embedded 3D Model"
+              frameborder="0"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              xr-spatial-tracking
+              execution-while-out-of-viewport
+              execution-while-not-rendered
+              web-share
+              :src="section.model_address + '/embed'"
+            ></iframe>
+          </div>
         </div>
       </div>
-      <div class="section-text">{{section.video_text}}</div>
     </div>
   </section>
 </template>
 
 <script>
 import { apiUrl } from "@/assets/api";
-import MainVideo from "@/components/article/MainVideo.vue";
 
 export default {
-  components: {
-    MainVideo, 
-  },
   props: ["section", "order"],
   data() {
     return {
@@ -78,17 +87,27 @@ export default {
   z-index: 10;
 }
 
-.video-container {
-  width: 100%;
-}
+.VisualModule {
+    display: flex; // Added
+    justify-content: center; // Added
+    flex-grow: 1; // Added
+  }
 
-.section-text {
-  margin-top: 1rem;
-  text-align: right;
-  padding-right: 5rem; // Adjust this value to control the spacing from the right
-}
-
-.full-width-video {
-  width: 100%;
-}
+  .sketchfab-embed-wrapper {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+    &:before {
+      content: '';
+      display: block;
+      padding-top: 56.25%; // Adjust this value for desired aspect ratio (e.g., 75% for 4:3 aspect ratio)
+    }
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 </style>
